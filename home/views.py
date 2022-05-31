@@ -10,7 +10,6 @@ def home(request):
     return render(request, 'home/home.html')
 
 def register(request):
-
     if request.POST:
         form = RegisterForm(request.POST or None)
         if form.is_valid():
@@ -18,7 +17,7 @@ def register(request):
             instance.save()
             messages.success(request, 'Successfully Registerd!')
             addFace(request.POST['face_id'])
-            return redirect('/')
+            return redirect('home')
         else:
             messages.error(request, "Account Register Failed!")
 
@@ -33,8 +32,7 @@ def addFace(face_id):
     face_id = face_id
     facerecognition.faceDetect(face_id)
     facerecognition.trainFace()
-    return redirect('/')
-
+    return redirect('home')
 
 def login(request):
     face_id = facerecognition.recognizeFace()
@@ -47,6 +45,5 @@ def welcome(request, face_id):
     data = {
         'user': UserProfile.objects.get(face_id= face_id)
     }
-
     return render(request, 'home/profile.html', data)
     
